@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using System.Diagnostics;
+
 
 namespace PNGoo
 {
@@ -13,18 +11,19 @@ namespace PNGoo
 
         /// <summary>
         /// The main entry point for the application.
+        /// parameter example:
+        /// 
+        /// -p="C:/root_folder/sub_folder"
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            mainView = new MainView();
+            mainView = new MainView(args);
+
             Application.Run(mainView);
         }
-
     }
-
-
 }

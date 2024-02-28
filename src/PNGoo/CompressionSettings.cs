@@ -31,6 +31,6 @@ namespace PNGoo
         /// <summary>
         /// Constructor
         /// </summary>
-        public CompressionSettings() {}
+        public CompressionSettings() { }
     }
 }

@@ -7,7 +7,7 @@ namespace PNGoo.CompressionTypeSettings
 {
     public class Indexed
     {
-        public event EventHandler PropertyChanged = delegate {};
+        public event EventHandler PropertyChanged = delegate { };
 
         private int colours = 256;
         /// <summary>

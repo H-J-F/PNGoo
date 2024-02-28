@@ -38,6 +38,11 @@ namespace PNGoo.BatchOperations
         public bool OutputIfLarger = false;
 
         /// <summary>
+        /// Should the file be overwrote if it is not png file even its file extension is ".png"
+        /// </summary>
+        public bool ForcePng = false;
+
+        /// <summary>
         /// Setting to use to compress files
         /// </summary>
         public CompressionSettings CompressionSettings;
@@ -45,7 +50,7 @@ namespace PNGoo.BatchOperations
         /// <summary>
         /// Create new batch file compressor
         /// </summary>
-        public BatchFileCompressor() {}
+        public BatchFileCompressor() { }
 
         /// <summary>
         /// Begin compressing files
@@ -86,7 +91,8 @@ namespace PNGoo.BatchOperations
             int totalFiles = FilePaths.Count();
             int snooze;
 
-            do {
+            do
+            {
                 snooze = Math.Max(totalFiles - CurrentFile, 1) * 25;
                 Thread.Sleep(snooze);
             } while (ThreadsRunning > 0);
@@ -95,7 +101,7 @@ namespace PNGoo.BatchOperations
         }
 
         private int NextIndex()
-        { 
+        {
             int idx = -1;
 
             CurrentIndexMutex.WaitOne();
@@ -116,8 +122,8 @@ namespace PNGoo.BatchOperations
                 try
                 {
                     filePath = FilePaths[i];
-                } 
-                catch (IndexOutOfRangeException) 
+                }
+                catch (IndexOutOfRangeException)
                 {
                     ThreadsRunning--;
                     break;
@@ -129,50 +135,51 @@ namespace PNGoo.BatchOperations
                  * try
                 {*/
 
-                    Compressor.PNGCompressor pngCompressor = compress(filePath);
+                Compressor.PNGCompressor pngCompressor = compress(filePath);
 
-                    // this stores the compressor that produced the smallest file
-                    Compressor.PNGCompressor winningCompressor = pngCompressor;
+                // this stores the compressor that produced the smallest file
+                Compressor.PNGCompressor winningCompressor = pngCompressor;
 
-                    byte[] fileToWrite = pngCompressor.CompressedFile;
-                    string outputDirectory = OutputDirectory;
+                byte[] fileToWrite = pngCompressor.CompressedFile;
+                string outputDirectory = OutputDirectory;
 
-                    // we may be getting a jpg as input, make sure we output png
-                    string fileName = Path.GetFileNameWithoutExtension(filePath) + ".png";
+                // we may be getting a jpg as input, make sure we output png
+                string fileName = Path.GetFileNameWithoutExtension(filePath) + ".png";
 
-                    // if the compressed file is larger than the original, keep the original (unless told otherwise)
-                    if (!OutputIfLarger &&
-                        Compressor.PNGCompressor.IsPng(pngCompressor.OriginalFile) &&
-                        pngCompressor.CompressedFile.Length >= pngCompressor.OriginalFile.Length)
-                    {
-                        fileToWrite = pngCompressor.OriginalFile;
-                        // there was no winning compressor
-                        winningCompressor = null;
-                    }
+                // if the compressed file is larger than the original, keep the original (unless told otherwise)
+                var isPng = Compressor.PNGCompressor.IsPng(pngCompressor.OriginalFile) || !ForcePng;
+                var isLarger = pngCompressor.CompressedFile.Length >= pngCompressor.OriginalFile.Length;
 
-                    // we're going to output to the same directory, overwriting files if needed
-                    if (outputDirectory == null)
-                    {
-                        outputDirectory = Path.GetDirectoryName(filePath);
-                    }
-
-                    // build the file path
-                    string outputFilePath = System.IO.Path.Combine(outputDirectory, fileName);
-
-                    // output the file
-                    File.WriteAllBytes(outputFilePath, fileToWrite);
-
-                    // fire the success event
-                    FileProcessSuccessEventArgs e = new FileProcessSuccessEventArgs(filePath, outputFilePath, i, winningCompressor);
-                    OnFileProcessSuccess(e);
-
-               /* }
-                catch (Exception e)
+                if (!OutputIfLarger && isLarger && isPng)
                 {
-                    // fire the fail event
-                    FileProcessFailEventArgs eventArgs = new FileProcessFailEventArgs(filePath, i, e);
-                    OnFileProcessFail(eventArgs);
-                } */
+                    fileToWrite = pngCompressor.OriginalFile;
+                    // there was no winning compressor
+                    winningCompressor = null;
+                }
+
+                // we're going to output to the same directory, overwriting files if needed
+                if (outputDirectory == null)
+                {
+                    outputDirectory = Path.GetDirectoryName(filePath);
+                }
+
+                // build the file path
+                string outputFilePath = System.IO.Path.Combine(outputDirectory, fileName);
+
+                // output the file
+                File.WriteAllBytes(outputFilePath, fileToWrite);
+
+                // fire the success event
+                FileProcessSuccessEventArgs e = new FileProcessSuccessEventArgs(filePath, outputFilePath, i, winningCompressor);
+                OnFileProcessSuccess(e);
+
+                /* }
+                 catch (Exception e)
+                 {
+                     // fire the fail event
+                     FileProcessFailEventArgs eventArgs = new FileProcessFailEventArgs(filePath, i, e);
+                     OnFileProcessFail(eventArgs);
+                 } */
             }
         }
 

@@ -18,7 +18,7 @@ namespace PNGoo.Compressor
         /// Compress a PNG, creates a palleted png.
         /// </summary>
         /// <param name="fileToCompress">Data to compress</param>
-        public PNGQuant (byte[] fileToCompress) : base (fileToCompress)
+        public PNGQuant(byte[] fileToCompress) : base(fileToCompress)
         {
             cmdLocation = AppDomain.CurrentDomain.BaseDirectory + @"\libs\pngquanti\pngquanti.exe";
         }

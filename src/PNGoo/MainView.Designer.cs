@@ -1,4 +1,7 @@
-﻿namespace PNGoo
+﻿using System.Windows.Forms;
+
+
+namespace PNGoo
 {
     partial class MainView
     {
@@ -20,7 +23,7 @@
             base.Dispose(disposing);
         }
 
-        
+
 
         #region Windows Form Designer generated code
 
@@ -31,7 +34,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainView));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.outputDirectoryBrowseButton = new System.Windows.Forms.Button();
@@ -40,6 +42,7 @@
             this.overwriteIfLargerCheckBox = new System.Windows.Forms.CheckBox();
             this.overwriteCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.forcePNGCheckBox = new System.Windows.Forms.CheckBox();
             this.colourSettingsButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.pngTypeComboBox = new System.Windows.Forms.ComboBox();
@@ -82,6 +85,7 @@
             this.addFilesDialog = new System.Windows.Forms.OpenFileDialog();
             this.outputFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.addDirBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -108,15 +112,15 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(649, 125);
+            this.splitContainer1.Size = new System.Drawing.Size(649, 115);
             this.splitContainer1.SplitterDistance = 323;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 1;
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.outputDirectoryBrowseButton);
             this.groupBox1.Controls.Add(this.outputDirectoryTextBox);
@@ -125,7 +129,7 @@
             this.groupBox1.Controls.Add(this.overwriteCheckBox);
             this.groupBox1.Location = new System.Drawing.Point(6, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(314, 116);
+            this.groupBox1.Size = new System.Drawing.Size(314, 107);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output";
@@ -133,9 +137,9 @@
             // outputDirectoryBrowseButton
             // 
             this.outputDirectoryBrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.outputDirectoryBrowseButton.Location = new System.Drawing.Point(235, 85);
+            this.outputDirectoryBrowseButton.Location = new System.Drawing.Point(235, 78);
             this.outputDirectoryBrowseButton.Name = "outputDirectoryBrowseButton";
-            this.outputDirectoryBrowseButton.Size = new System.Drawing.Size(72, 21);
+            this.outputDirectoryBrowseButton.Size = new System.Drawing.Size(72, 19);
             this.outputDirectoryBrowseButton.TabIndex = 4;
             this.outputDirectoryBrowseButton.Text = "Browse...";
             this.outputDirectoryBrowseButton.UseVisualStyleBackColor = true;
@@ -143,28 +147,28 @@
             // 
             // outputDirectoryTextBox
             // 
-            this.outputDirectoryTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.outputDirectoryTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.outputDirectoryTextBox.Location = new System.Drawing.Point(10, 85);
+            this.outputDirectoryTextBox.Location = new System.Drawing.Point(10, 78);
             this.outputDirectoryTextBox.Name = "outputDirectoryTextBox";
-            this.outputDirectoryTextBox.Size = new System.Drawing.Size(219, 20);
+            this.outputDirectoryTextBox.Size = new System.Drawing.Size(219, 21);
             this.outputDirectoryTextBox.TabIndex = 3;
             // 
             // outputDirectoryLabel
             // 
             this.outputDirectoryLabel.AutoSize = true;
-            this.outputDirectoryLabel.Location = new System.Drawing.Point(7, 68);
+            this.outputDirectoryLabel.Location = new System.Drawing.Point(7, 63);
             this.outputDirectoryLabel.Name = "outputDirectoryLabel";
-            this.outputDirectoryLabel.Size = new System.Drawing.Size(87, 13);
+            this.outputDirectoryLabel.Size = new System.Drawing.Size(107, 12);
             this.outputDirectoryLabel.TabIndex = 2;
             this.outputDirectoryLabel.Text = "Output Directory:";
             // 
             // overwriteIfLargerCheckBox
             // 
             this.overwriteIfLargerCheckBox.AutoSize = true;
-            this.overwriteIfLargerCheckBox.Location = new System.Drawing.Point(10, 42);
+            this.overwriteIfLargerCheckBox.Location = new System.Drawing.Point(10, 39);
             this.overwriteIfLargerCheckBox.Name = "overwriteIfLargerCheckBox";
-            this.overwriteIfLargerCheckBox.Size = new System.Drawing.Size(249, 17);
+            this.overwriteIfLargerCheckBox.Size = new System.Drawing.Size(306, 16);
             this.overwriteIfLargerCheckBox.TabIndex = 1;
             this.overwriteIfLargerCheckBox.Text = "Output / Overwrite Even if Larger Than Original";
             this.overwriteIfLargerCheckBox.UseVisualStyleBackColor = true;
@@ -172,9 +176,9 @@
             // overwriteCheckBox
             // 
             this.overwriteCheckBox.AutoSize = true;
-            this.overwriteCheckBox.Location = new System.Drawing.Point(10, 19);
+            this.overwriteCheckBox.Location = new System.Drawing.Point(10, 18);
             this.overwriteCheckBox.Name = "overwriteCheckBox";
-            this.overwriteCheckBox.Size = new System.Drawing.Size(230, 17);
+            this.overwriteCheckBox.Size = new System.Drawing.Size(270, 16);
             this.overwriteCheckBox.TabIndex = 0;
             this.overwriteCheckBox.Text = "Output to Same Directory (Overwrite PNGs)";
             this.overwriteCheckBox.UseVisualStyleBackColor = true;
@@ -182,25 +186,36 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.forcePNGCheckBox);
             this.groupBox2.Controls.Add(this.colourSettingsButton);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.pngTypeComboBox);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(315, 116);
+            this.groupBox2.Size = new System.Drawing.Size(351, 107);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Compression Options";
             // 
+            // forcePNGCheckBox
+            // 
+            this.forcePNGCheckBox.AutoSize = true;
+            this.forcePNGCheckBox.Location = new System.Drawing.Point(10, 63);
+            this.forcePNGCheckBox.Name = "forcePNGCheckBox";
+            this.forcePNGCheckBox.Size = new System.Drawing.Size(78, 16);
+            this.forcePNGCheckBox.TabIndex = 5;
+            this.forcePNGCheckBox.Text = "Force PNG";
+            this.forcePNGCheckBox.UseVisualStyleBackColor = true;
+            // 
             // colourSettingsButton
             // 
             this.colourSettingsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.colourSettingsButton.Location = new System.Drawing.Point(206, 39);
+            this.colourSettingsButton.Location = new System.Drawing.Point(242, 36);
             this.colourSettingsButton.Name = "colourSettingsButton";
-            this.colourSettingsButton.Size = new System.Drawing.Size(100, 23);
+            this.colourSettingsButton.Size = new System.Drawing.Size(100, 21);
             this.colourSettingsButton.TabIndex = 2;
             this.colourSettingsButton.Text = "Colour Settings...";
             this.colourSettingsButton.UseVisualStyleBackColor = true;
@@ -208,20 +223,20 @@
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(7, 20);
+            this.label2.Location = new System.Drawing.Point(7, 18);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 17);
+            this.label2.Size = new System.Drawing.Size(100, 16);
             this.label2.TabIndex = 0;
             this.label2.Text = "PNG Type:";
             // 
             // pngTypeComboBox
             // 
-            this.pngTypeComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.pngTypeComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pngTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.pngTypeComboBox.Location = new System.Drawing.Point(10, 40);
+            this.pngTypeComboBox.Location = new System.Drawing.Point(10, 37);
             this.pngTypeComboBox.Name = "pngTypeComboBox";
-            this.pngTypeComboBox.Size = new System.Drawing.Size(190, 21);
+            this.pngTypeComboBox.Size = new System.Drawing.Size(226, 20);
             this.pngTypeComboBox.TabIndex = 1;
             this.pngTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.pngTypeComboBox_SelectedIndexChanged);
             // 
@@ -251,79 +266,74 @@
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
             this.fileToolStripMenuItem.Text = "&File";
             this.fileToolStripMenuItem.Visible = false;
             // 
             // newToolStripMenuItem
             // 
-            this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
             // 
-            this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.openToolStripMenuItem.Text = "&Open";
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(152, 6);
             // 
             // saveToolStripMenuItem
             // 
-            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(152, 6);
             // 
             // printToolStripMenuItem
             // 
-            this.printToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("printToolStripMenuItem.Image")));
             this.printToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
             this.printToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
             // 
-            this.printPreviewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripMenuItem.Image")));
             this.printPreviewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(152, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             // 
             // editToolStripMenuItem
@@ -333,29 +343,28 @@
             this.toolStripSeparator4,
             this.selectAllToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(42, 21);
             this.editToolStripMenuItem.Text = "&Edit";
             this.editToolStripMenuItem.Visible = false;
             // 
             // pasteToolStripMenuItem
             // 
-            this.pasteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pasteToolStripMenuItem.Image")));
             this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.pasteToolStripMenuItem.Text = "&Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(140, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.selectAllToolStripMenuItem.Text = "Select &All";
             // 
             // helpToolStripMenuItem
@@ -367,37 +376,37 @@
             this.toolStripSeparator5,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(47, 21);
             this.helpToolStripMenuItem.Text = "&Help";
             this.helpToolStripMenuItem.Visible = false;
             // 
             // contentsToolStripMenuItem
             // 
             this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.contentsToolStripMenuItem.Text = "&Contents";
             // 
             // indexToolStripMenuItem
             // 
             this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.indexToolStripMenuItem.Text = "&Index";
             // 
             // searchToolStripMenuItem
             // 
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.searchToolStripMenuItem.Text = "&Search";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(119, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(124, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             // 
             // statusStrip1
@@ -405,7 +414,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressBar,
             this.statusText});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 375);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 344);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
             this.statusStrip1.Size = new System.Drawing.Size(649, 22);
@@ -422,15 +431,15 @@
             // statusText
             // 
             this.statusText.Name = "statusText";
-            this.statusText.Size = new System.Drawing.Size(93, 17);
+            this.statusText.Size = new System.Drawing.Size(105, 17);
             this.statusText.Text = "No files selected";
             // 
             // fileBatchDataGridView
             // 
             this.fileBatchDataGridView.AllowUserToAddRows = false;
             this.fileBatchDataGridView.AllowUserToResizeRows = false;
-            this.fileBatchDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.fileBatchDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fileBatchDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.fileBatchDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
@@ -446,13 +455,13 @@
             this.StatusColumn});
             this.fileBatchDataGridView.ContextMenuStrip = this.fileListContextMenu;
             this.fileBatchDataGridView.GridColor = System.Drawing.SystemColors.ControlLight;
-            this.fileBatchDataGridView.Location = new System.Drawing.Point(0, 149);
+            this.fileBatchDataGridView.Location = new System.Drawing.Point(0, 138);
             this.fileBatchDataGridView.Name = "fileBatchDataGridView";
             this.fileBatchDataGridView.ReadOnly = true;
             this.fileBatchDataGridView.RowHeadersVisible = false;
             this.fileBatchDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.fileBatchDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.fileBatchDataGridView.Size = new System.Drawing.Size(649, 189);
+            this.fileBatchDataGridView.Size = new System.Drawing.Size(649, 174);
             this.fileBatchDataGridView.TabIndex = 2;
             this.fileBatchDataGridView.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.fileBatchDataGridView_RowsRemoved);
             this.fileBatchDataGridView.SelectionChanged += new System.EventHandler(this.fileBatchDataGridView_SelectionChanged);
@@ -496,22 +505,22 @@
             this.fileListContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.pasteMenuItem});
             this.fileListContextMenu.Name = "fileListContextMenu";
-            this.fileListContextMenu.Size = new System.Drawing.Size(144, 26);
+            this.fileListContextMenu.Size = new System.Drawing.Size(153, 26);
             // 
             // pasteMenuItem
             // 
             this.pasteMenuItem.Name = "pasteMenuItem";
             this.pasteMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.pasteMenuItem.Size = new System.Drawing.Size(152, 22);
             this.pasteMenuItem.Text = "&Paste";
             this.pasteMenuItem.Click += new System.EventHandler(this.pasteMenuItem_Click);
             // 
             // addFilesButton
             // 
             this.addFilesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addFilesButton.Location = new System.Drawing.Point(516, 344);
+            this.addFilesButton.Location = new System.Drawing.Point(390, 318);
             this.addFilesButton.Name = "addFilesButton";
-            this.addFilesButton.Size = new System.Drawing.Size(75, 23);
+            this.addFilesButton.Size = new System.Drawing.Size(106, 21);
             this.addFilesButton.TabIndex = 4;
             this.addFilesButton.Text = "Add Files...";
             this.addFilesButton.UseVisualStyleBackColor = true;
@@ -521,9 +530,9 @@
             // 
             this.removeItemButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.removeItemButton.Enabled = false;
-            this.removeItemButton.Location = new System.Drawing.Point(6, 344);
+            this.removeItemButton.Location = new System.Drawing.Point(6, 318);
             this.removeItemButton.Name = "removeItemButton";
-            this.removeItemButton.Size = new System.Drawing.Size(75, 23);
+            this.removeItemButton.Size = new System.Drawing.Size(75, 21);
             this.removeItemButton.TabIndex = 3;
             this.removeItemButton.Text = "Remove Item";
             this.removeItemButton.UseVisualStyleBackColor = true;
@@ -532,9 +541,9 @@
             // goButton
             // 
             this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.goButton.Location = new System.Drawing.Point(597, 344);
+            this.goButton.Location = new System.Drawing.Point(597, 318);
             this.goButton.Name = "goButton";
-            this.goButton.Size = new System.Drawing.Size(45, 23);
+            this.goButton.Size = new System.Drawing.Size(45, 21);
             this.goButton.TabIndex = 5;
             this.goButton.Text = "Go!";
             this.goButton.UseVisualStyleBackColor = true;
@@ -556,20 +565,32 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.Enabled = false;
-            this.cancelButton.Location = new System.Drawing.Point(440, 344);
+            this.cancelButton.Location = new System.Drawing.Point(314, 318);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(70, 23);
+            this.cancelButton.Size = new System.Drawing.Size(70, 21);
             this.cancelButton.TabIndex = 7;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
+            // addDirBtn
+            // 
+            this.addDirBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.addDirBtn.Location = new System.Drawing.Point(502, 318);
+            this.addDirBtn.Name = "addDirBtn";
+            this.addDirBtn.Size = new System.Drawing.Size(89, 21);
+            this.addDirBtn.TabIndex = 8;
+            this.addDirBtn.Text = "Add Dir...";
+            this.addDirBtn.UseVisualStyleBackColor = true;
+            this.addDirBtn.Click += new System.EventHandler(this.addDirButton_Click);
+            // 
             // MainView
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(649, 397);
+            this.ClientSize = new System.Drawing.Size(649, 366);
+            this.Controls.Add(this.addDirBtn);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.goButton);
             this.Controls.Add(this.removeItemButton);
@@ -578,7 +599,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
-            this.MinimumSize = new System.Drawing.Size(587, 320);
+            this.MinimumSize = new System.Drawing.Size(587, 298);
             this.Name = "MainView";
             this.Text = "PNGoo";
             this.Activated += new System.EventHandler(this.MainView_Activated);
@@ -592,6 +613,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -655,11 +677,8 @@
         public System.Windows.Forms.ToolStripStatusLabel statusText;
         public System.Windows.Forms.DataGridView fileBatchDataGridView;
         private System.Windows.Forms.Button cancelButton;
-
-
-
-
-
+        private System.Windows.Forms.Button addDirBtn;
+        private CheckBox forcePNGCheckBox;
     }
 }
 

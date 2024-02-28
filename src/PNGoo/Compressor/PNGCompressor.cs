@@ -21,9 +21,10 @@ namespace PNGoo.Compressor
         /// <returns>True if the file is a PNG</returns>
         public static bool IsPng(byte[] fileData)
         {
-            byte[] pngHeader = {137, 80, 78, 71, 13, 10, 26, 10};
+            byte[] pngHeader = { 137, 80, 78, 71, 13, 10, 26, 10 };
+            var takeHeader = fileData.Take(8);
 
-            if (pngHeader.SequenceEqual(fileData.Take(8)))
+            if (pngHeader.SequenceEqual(takeHeader))
             {
                 return true;
             }
@@ -123,7 +124,7 @@ namespace PNGoo.Compressor
             {
                 tmpFileLocation = Path.GetTempFileName();
                 Image img;
-                
+
                 // ensure we've been given a valid image
                 try
                 {

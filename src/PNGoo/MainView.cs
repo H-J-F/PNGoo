@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
-using System.Drawing.Imaging;
+using System.Linq;
+using Microsoft.WindowsAPICodePack.Dialogs;
+
 
 namespace PNGoo
 {
+    public struct BatchParameter
+    {
+        public bool isForcePng;
+        public bool isOverwriteIfLarger;
+        public string outputPath;
+        public string[] fileList;
+    }
+
     public partial class MainView : Form
     {
         private delegate void passMsg(string msg);
@@ -27,17 +30,26 @@ namespace PNGoo
         private int TotalFiles;
         private bool Running = false;
         private int PercentComplete;
+        private string LastSelectPath = null;
         private System.Windows.Forms.Timer ProgressTimer = new System.Windows.Forms.Timer();
 
         private BatchOperations.BatchFileCompressor batch = new BatchOperations.BatchFileCompressor();
 
-        public MainView()
+        private CommonOpenFileDialog commonOpenFileDialog;
+
+        public string[] CommandLineArgs { get; set; }
+
+        public MainView(string[] args)
         {
             InitializeComponent();
 
-            batch.FileProcessSuccess += new PNGoo.BatchOperations.FileProcessSuccessEventHandler(batch_FileProcessSuccess);
-            batch.FileProcessFail += new PNGoo.BatchOperations.FileProcessFailEventHandler(batch_FileProcessFail);
-            batch.Complete += new EventHandler(batch_Complete);
+            CommandLineArgs = args;
+
+            batch.FileProcessSuccess += batch_FileProcessSuccess;
+            batch.FileProcessFail += batch_FileProcessFail;
+            batch.Complete += batch_Complete;
+
+            HandleCommandLineArgs();
         }
 
         private void MainView_Load(object sender, EventArgs e)
@@ -52,12 +64,12 @@ namespace PNGoo
         {
             string[] fileList = getFileList();
             TotalFiles = fileList.Length;
-            updateStatusText((TotalFiles == 0? "No" : TotalFiles.ToString()) + " files selected");
+            updateStatusText((TotalFiles == 0 ? "No" : TotalFiles.ToString()) + " files selected");
         }
 
         private void updateStatusText(string text)
         {
-             statusText.Text = text;
+            statusText.Text = text;
         }
 
         private void SetRunning()
@@ -66,6 +78,7 @@ namespace PNGoo
             Running = true;
             goButton.Enabled = false;
             addFilesButton.Enabled = false;
+            addDirBtn.Enabled = false;
             removeItemButton.Enabled = false;
             cancelButton.Enabled = true;
             progressBar.Visible = true;
@@ -77,6 +90,7 @@ namespace PNGoo
             Running = false;
             goButton.Enabled = true;
             addFilesButton.Enabled = true;
+            addDirBtn.Enabled = true;
             setRemoveButtonEnabled();
             cancelButton.Enabled = false;
             progressBar.Visible = false;
@@ -86,7 +100,7 @@ namespace PNGoo
         private void updateProgress(object sender, EventArgs e)
         {
             PercentComplete = FilesProcessed * 100 / TotalFiles;
-            
+
             try
             {
                 progressBar.Value = PercentComplete;
@@ -95,7 +109,7 @@ namespace PNGoo
             {
                 Debug.Print("Can't update progress bar...");
             }
-             
+
 
             try
             {
@@ -111,6 +125,209 @@ namespace PNGoo
                 ProgressTimer.Stop();
                 SetStoppedRunning();
             }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            commonOpenFileDialog?.Dispose();
+            base.OnFormClosing(e);
+        }
+
+        private void HandleCommandLineArgs()
+        {
+            if (CommandLineArgs == null || CommandLineArgs.Length <= 0) return;
+
+            var parameters = new Dictionary<string, string>();
+            var success = ParseParameters(CommandLineArgs, ref parameters);
+
+            if (!success)
+            {
+                return;
+            }
+
+            RemoveAll();
+            ProcessParameters(parameters);
+        }
+
+        private bool ParseParameters(string[] args, ref Dictionary<string, string> result)
+        {
+            foreach (string arg in args)
+            {
+                var index = arg.IndexOf('=');
+                if (index > 0)  // make sure '=' is not the first char
+                {
+                    string key = arg.Substring(0, index);
+                    string value = arg.Substring(index + 1);
+                    result[key] = value.Trim('"', '\'');
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to parse parameter: {arg}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool GetBatchParameter(Dictionary<string, string> parameters, out BatchParameter batchParameter)
+        {
+            batchParameter = default;
+
+            // get output path
+            var success = parameters.TryGetValue("-OutputPath", out var outputPath);
+            if (!success)
+            {
+                batchParameter.outputPath = null;
+            }
+            else
+            {
+                if (Directory.Exists(outputPath))
+                {
+                    batchParameter.outputPath = outputPath;
+                }
+                else
+                {
+                    Console.WriteLine("OutputPath not exist!");
+                    return false;
+                }
+            }
+
+            // get file list
+            success = parameters.TryGetValue("-p", out var path);
+            if (!success) parameters.TryGetValue("-Path", out path);
+
+            if (File.Exists(path))
+            {
+                batchParameter.fileList = new[] { path };
+            }
+            else if (Directory.Exists(path))
+            {
+                batchParameter.fileList = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories);
+            }
+            else
+            {
+                Console.WriteLine("Path is not valid！");
+                return false;
+            }
+
+            // get parameter isForcePng
+            success = parameters.TryGetValue("-ForcePng", out var isForcePng);
+            batchParameter.isForcePng = success && Convert.ToBoolean(isForcePng);
+
+            // get parameter isOverwriteIfLarger
+            success = parameters.TryGetValue("-OverwriteIfLarger", out var isOverwriteIfLarger);
+            batchParameter.isOverwriteIfLarger = success && Convert.ToBoolean(isOverwriteIfLarger);
+
+            return true;
+        }
+
+        private void ProcessParameters(Dictionary<string, string> parameters)
+        {
+            var success = GetBatchParameter(parameters, out var batchParameter);
+            if (!success) return;
+
+            addFiles(batchParameter.fileList);
+            updateFileColsToNewFile();
+
+            outputDirectoryTextBox.Text = batchParameter.outputPath;
+            overwriteCheckBox.Checked = string.IsNullOrWhiteSpace(batchParameter.outputPath);
+            overwriteIfLargerCheckBox.Checked = batchParameter.isOverwriteIfLarger;
+            forcePNGCheckBox.Checked = batchParameter.isForcePng;
+
+            batch.OutputIfLarger = batchParameter.isOverwriteIfLarger;
+            batch.ForcePng = batchParameter.isForcePng;
+            batch.CompressionSettings = compressionSettings;
+            batch.FilePaths = batchParameter.fileList;
+            batch.OutputDirectory = batchParameter.outputPath;
+
+            DoCompress();
+        }
+
+        private void RemoveAll()
+        {
+            if (Running) return;
+            foreach (DataGridViewRow row in fileBatchDataGridView.Rows)
+            {
+                fileBatchDataGridView.Rows.Remove(row);
+            }
+        }
+
+        private void OnGoBtnClick()
+        {
+            string[] fileList = getFileList();
+            var isValid = CheckIsValid(fileList);
+            if (!isValid) return;
+
+            // update output
+            updateFileColsToNewFile();
+
+            // let's start the batch
+            batch.OutputDirectory = outputDirectoryTextBox.Text;
+            batch.OutputIfLarger = overwriteIfLargerCheckBox.Checked;
+            batch.ForcePng = forcePNGCheckBox.Checked;
+            batch.CompressionSettings = compressionSettings;
+            batch.FilePaths = fileList;
+
+            // if we're wanting to overwrite the original, set the output dir to null
+            if (overwriteCheckBox.Checked)
+            {
+                batch.OutputDirectory = null;
+            }
+
+            DoCompress();
+        }
+
+        private bool CheckIsValid(string[] fileList)
+        {
+            // are there entries in our file list?
+            if (fileList.Length == 0)
+            {
+                MessageBox.Show(
+                    "Please add some files to be processed first",
+                    "No files in batch",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+            // check we've got an output directory
+            if (!overwriteCheckBox.Checked && outputDirectoryTextBox.Text == String.Empty)
+            {
+                MessageBox.Show(
+                    "Please select an output directory to continue",
+                    "No output directory selected",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+            // check the output directory exists
+            if (!overwriteCheckBox.Checked && !isValidOutputDirectory(outputDirectoryTextBox.Text))
+            {
+                MessageBox.Show(
+                    "Output directory does not exist",
+                    "Invalid output directory",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void DoCompress()
+        {
+            // Set some UI stuff
+            SetRunning();
+
+            FilesProcessed = 0;
+            PercentComplete = 0;
+
+            ProgressTimer.Tick += updateProgress;
+            ProgressTimer.Start();
+
+            batch.Start();
         }
 
         private void addFilesButton_Click(object sender, EventArgs e)
@@ -137,7 +354,6 @@ namespace PNGoo
             // search for duplicates of the current file
             foreach (DataGridViewRow row in fileBatchDataGridView.Rows)
             {
-
                 if (row.Cells["RealFileColumn"].Value.ToString() == path)
                 {
                     return;
@@ -317,7 +533,7 @@ namespace PNGoo
             {
                 compressionSettings.Indexed = colourSettings.CompressionSettings;
             }
-            
+
         }
 
         private void overwriteCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -334,66 +550,7 @@ namespace PNGoo
 
         private void goButton_Click(object sender, EventArgs e)
         {
-            string[] fileList = getFileList();
-
-            // are there entries in our file list?
-            if (fileList.Length == 0)
-            {
-                MessageBox.Show(
-                    "Please add some files to be processed first",
-                    "No files in batch",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            // check we've got an output directory
-            if (!overwriteCheckBox.Checked && outputDirectoryTextBox.Text == String.Empty)
-            {
-                MessageBox.Show(
-                    "Please select an output directory to continue",
-                    "No output directory selected",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            // check the output directory exists
-            if (!overwriteCheckBox.Checked && !isValidOutputDirectory(outputDirectoryTextBox.Text))
-            {
-                MessageBox.Show(
-                    "Output directory does not exist",
-                    "Invalid output directory",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            // update output
-            updateFileColsToNewFile();
-
-            // let's start the batch
-            batch.OutputDirectory = outputDirectoryTextBox.Text;
-            batch.OutputIfLarger = overwriteIfLargerCheckBox.Checked;
-            batch.CompressionSettings = compressionSettings;
-            batch.FilePaths = fileList;
-
-            // if we're wanting to overwrite the original, set the output dir to null
-            if (overwriteCheckBox.Checked)
-            {
-                batch.OutputDirectory = null;
-            }
-
-            // Set some UI stuff
-            SetRunning();
-
-            FilesProcessed = 0;
-            PercentComplete = 0;
-
-            ProgressTimer.Tick += new EventHandler(updateProgress);
-            ProgressTimer.Start();
-
-            batch.Start();
+            OnGoBtnClick();
         }
 
         /// <summary>
@@ -491,5 +648,36 @@ namespace PNGoo
             Running = false;
         }
 
+        private void addDirButton_Click(object sender, EventArgs e)
+        {
+            if (commonOpenFileDialog == null)
+            {
+                commonOpenFileDialog = new CommonOpenFileDialog()
+                {
+                    Multiselect = true,
+                    IsFolderPicker = true,
+                    Title = "Select Folder",
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+                };
+            }
+            else
+            {
+                if (LastSelectPath != null)
+                {
+                    var dirInfo = new DirectoryInfo(LastSelectPath);
+                    if (dirInfo.Parent != null) commonOpenFileDialog.InitialDirectory = dirInfo.Parent.FullName;
+                }
+            }
+
+            if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                LastSelectPath = commonOpenFileDialog.FileNames.First();
+                foreach (var path in commonOpenFileDialog.FileNames)
+                {
+                    var pngFiles = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories);
+                    addFiles(pngFiles);
+                }
+            }
+        }
     }
 }
