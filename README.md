@@ -2,7 +2,7 @@ PNGoo
 =====
 
 The modifications of this forked version of PNGoo:
-- Update to .net 4.7.2.
+- Update to .NET Framework 4.7.2.
 - Multi -folder selection (multiple selection, recursive selection, including all the .png format files in all sub -directory).
 - The original file will not be covered if the compressed file size is larger and the original file is not encoded in PNG format, unless the check box of Force PNG is checked.
 
