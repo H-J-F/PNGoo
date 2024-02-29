@@ -14,7 +14,7 @@ The modifications of this forked version of PNGoo:
 
     Example: PNGoo.exe -Path="C:/YourPngFilesPath/" -OutputPath="C:/YourPngOutputPath/" -ForcePng="false" -OverwriteIfLarger="false"
 
-![PNGoo.exe](images/1.png)
+![PNGoo.exe](docs/images/1.png)
 
 The extension of PNGoo for Unity:
 =====
@@ -24,6 +24,6 @@ The extension of PNGoo for Unity:
     - Select the png image or directory you want to compress, right-click and choose 'PNGoo -> Compress' to complete the compression. Alternatively, you can click on the menu 'Tools -> PNGoo -> Compress' to complete the compression. The Unity process will continue to wait until PNGoo is closed.
     - Click on the menu 'Tools -> PNGoo -> Open PNGoo' to open the PNGoo program. This command will not cause the Unity process to wait.
 
-![Compress](images/2.png)
+![Compress](docs/images/2.png)
 
-![Open PNGoo](images/3.png)
+![Open PNGoo](docs/images/3.png)
