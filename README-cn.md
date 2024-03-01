@@ -1,4 +1,4 @@
-[英文版README](README.md)
+[README in English](README.md)
 
 此fork版本的PNGoo修改如下:
 =====
