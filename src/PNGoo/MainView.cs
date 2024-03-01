@@ -197,13 +197,15 @@ namespace PNGoo
             success = parameters.TryGetValue("-p", out var path);
             if (!success) parameters.TryGetValue("-Path", out path);
 
-            if (File.Exists(path))
+            var extension = Path.GetExtension(path)?.ToLower();
+            if (File.Exists(path) && !string.IsNullOrWhiteSpace(extension) && extension.Equals(".png"))
             {
                 batchParameter.fileList = new[] { path };
             }
             else if (Directory.Exists(path))
             {
                 batchParameter.fileList = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories);
+                if (batchParameter.fileList == null || batchParameter.fileList.Length <= 0) return false;
             }
             else
             {
@@ -225,12 +227,7 @@ namespace PNGoo
         private void ProcessParameters(Dictionary<string, string> parameters)
         {
             var success = GetBatchParameter(parameters, out var batchParameter);
-            if (!success || batchParameter.fileList == null || batchParameter.fileList.Length <= 0)
-            {
-                Application.Exit();
-                Environment.Exit(0);
-                return;
-            }
+            if (!success) return;
 
             addFiles(batchParameter.fileList);
             updateFileColsToNewFile();
