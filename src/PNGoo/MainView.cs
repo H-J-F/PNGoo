@@ -671,9 +671,21 @@ namespace PNGoo
 
             if (commonOpenFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                LastSelectPath = commonOpenFileDialog.FileNames.First();
+                var filePath = commonOpenFileDialog.FileNames.First();
+                var root = Path.GetPathRoot(filePath);
+                if (root.Equals(filePath))
+                {
+                    MessageBox.Show("Not valid path!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+
+                LastSelectPath = filePath;
+
                 foreach (var path in commonOpenFileDialog.FileNames)
                 {
+                    var pathRoot = Path.GetPathRoot(path);
+                    if (pathRoot.Equals(path)) continue;
+
                     var pngFiles = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories);
                     addFiles(pngFiles);
                 }
