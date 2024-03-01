@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
@@ -28,13 +29,21 @@ public static class PNGooTools
     [MenuItem("Tools/PNGoo/Compress", priority = 100)]
     private static void ProcessPNGooCompress()
     {
-        var path = AssetDatabase.GetAssetPath(Selection.activeObject);
-        path = Application.dataPath.Replace("Assets", path).Replace("/", "\\");
+        var sb = new StringBuilder();
+        for (var i = 0; i < Selection.assetGUIDs.Length; i++)
+        {
+            var assetPath = Selection.assetGUIDs[i];
+            var path = AssetDatabase.GUIDToAssetPath(assetPath);
+            path = Application.dataPath.Replace("Assets", path).Replace("/", "\\");
+
+            if (i > 0) sb.Append("|");
+            sb.Append(path);
+        }
 
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = PNGooPath, // 第三方软件的路径
-            Arguments = $"-p=\"{path}\"", // 命令行参数
+            Arguments = $"-p=\"{sb.ToString()}\"", // 命令行参数
             UseShellExecute = true, // 是否使用操作系统shell启动进程
             RedirectStandardError = false, // 是否重定向标准错误
             RedirectStandardInput = false, // 是否重定向标准输入

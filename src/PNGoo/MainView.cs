@@ -194,24 +194,34 @@ namespace PNGoo
             }
 
             // get file list
-            success = parameters.TryGetValue("-p", out var path);
-            if (!success) parameters.TryGetValue("-Path", out path);
+            success = parameters.TryGetValue("-p", out var rawPath);
+            if (!success) parameters.TryGetValue("-Path", out rawPath);
 
-            var extension = Path.GetExtension(path)?.ToLower();
-            if (File.Exists(path) && !string.IsNullOrWhiteSpace(extension) && extension.Equals(".png"))
+            if (string.IsNullOrEmpty(rawPath)) return false;
+
+            var paths = rawPath.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            var pathList = new List<string>();
+
+            foreach (var p in paths)
             {
-                batchParameter.fileList = new[] { path };
+                var path = p.Trim();
+                var extension = Path.GetExtension(path)?.ToLower();
+                if (File.Exists(path) && !string.IsNullOrWhiteSpace(extension) && extension.Equals(".png"))
+                {
+                    pathList.Add(path);
+                }
+                else if (Directory.Exists(path))
+                {
+                    pathList.AddRange(Directory.GetFiles(path, "*.png", SearchOption.AllDirectories));
+                }
+                else
+                {
+                    Console.WriteLine($"Path is not valid！Path: {path}");
+                }
             }
-            else if (Directory.Exists(path))
-            {
-                batchParameter.fileList = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories);
-                if (batchParameter.fileList == null || batchParameter.fileList.Length <= 0) return false;
-            }
-            else
-            {
-                Console.WriteLine("Path is not valid！");
-                return false;
-            }
+
+            if (pathList.Count <= 0) return false;
+            batchParameter.fileList = pathList.ToArray();
 
             // get parameter isForcePng
             success = parameters.TryGetValue("-ForcePng", out var isForcePng);
