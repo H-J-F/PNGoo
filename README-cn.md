@@ -22,7 +22,7 @@ PNGoo的Unity编辑器扩展:
 
 - 把目录ExtensionForUnity中的PNGooTools.cs脚本文件放到Unity项目的Editor目录下，并且修改PNGooTools.cs中的PNGooPath为你的PNGoo程序位置，同时把PNGoo.exe及其依赖文件放入Unity项目中。
 - 使用方法如下:
-    - 选中要压缩的png图片或目录，支持同时选择png图片和文件夹，支持多选，右键选择"PNGoo -> Compress"，即可完成压缩。或点击菜单"Tools -> PNGoo ->Compress"，即可完成压缩。Unity进程将一直等待直到关闭PNGoo。
+    - 选中要压缩的png图片或目录，支持同时选择png图片和文件夹，支持多选，右键选择"PNGoo -> Compress"，即可完成压缩。或点击菜单"Tools -> PNGoo -> Compress"，即可完成压缩。Unity进程将一直等待直到关闭PNGoo。
     - 点击菜单"Tools->PNGoo->Open PNGoo"，即可打开PNGoo程序，该命令不会导致Unity进程等待。
 
 ![压缩](docs/images/2.png)
