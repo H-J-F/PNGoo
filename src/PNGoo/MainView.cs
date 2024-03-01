@@ -225,7 +225,12 @@ namespace PNGoo
         private void ProcessParameters(Dictionary<string, string> parameters)
         {
             var success = GetBatchParameter(parameters, out var batchParameter);
-            if (!success) return;
+            if (!success || batchParameter.fileList == null || batchParameter.fileList.Length <= 0)
+            {
+                Application.Exit();
+                Environment.Exit(0);
+                return;
+            }
 
             addFiles(batchParameter.fileList);
             updateFileColsToNewFile();
